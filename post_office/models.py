@@ -70,6 +70,9 @@ class Email(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.to
+    
+    def __str__(self):
+        return self.__unicode__()
 
     def email_message(self, connection=None):
         """
@@ -167,6 +170,9 @@ class Log(models.Model):
 
     def __unicode__(self):
         return text_type(self.date)
+    
+    def __str__(self):
+        return self.__unicode__()
 
 
 class EmailTemplate(models.Model):
@@ -197,7 +203,13 @@ class EmailTemplate(models.Model):
         verbose_name_plural = _("Email Templates")
 
     def __unicode__(self):
-        return self.name
+        if not self.default_template:
+            return self.name
+        else:
+            return '%s: %s' % (self.default_template, self.language)
+    
+    def __str__(self):
+        return self.__unicode__()
 
     def save(self, *args, **kwargs):
         # If template is a translation, use default template's name
